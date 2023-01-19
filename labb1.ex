@@ -10,13 +10,56 @@ defmodule Main do
   # SIMPLA VÄNSTER, SIMPLA HÖGER, SIMPLA DIG SJÄLV!!!
   # SIMPLIFICATION CODE:
 
+  # OBS! LÖSNINGEN PÅ VÄRLDENS ALLA PROBLEM ÄR ATT REKURSIVT KALLA
+  # PÅ SIG SJÄLV NÄR EN ÄNDRIGNG GÖRS?
+
+  def same_coeff({t, l, r}) do
+    case {t, l, r} do
+      #a+a = 2a
+      {:add, a, a} -> {:mul, {:num, 2}, a}
+
+      # a*a = a^2
+      {:mul, a, a} -> same_coeff({:pow, a, {:num, 2}})
+
+      {:pow, {:pow, a, p1}, p2} -> same_coeff({:pow, a, mul(p1, p2)})
+
+      # ax+bx = (a+b)x
+      {:add, {:mul, a, x}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
+      {:add, {:mul, a, x}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
+      {:add, {:mul, x, a}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
+      {:add, {:mul, x, a}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
+
+
+      {:add, {:mul, a, x}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
+      {:add, {:mul, a, x}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
+      {:add, {:mul, x, a}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
+      {:add, {:mul, x, a}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
+
+      #Recursive step
+      {a, b, c} -> cond do
+        same_coeff(b) != b or same_coeff(c) != c -> # if updated
+        same_coeff({a, same_coeff(b), same_coeff(c)})
+        true ->
+          {a, same_coeff(b), same_coeff(c)}
+        end
+    end
+  end
+
+  # OBS! lös detta problemet för de två andra också!
+  def same_coeff({a, b}) do {a, same_coeff(b)} end
+  def same_coeff(a) do a end
+
   def remove_zeros({t, l, r}) do
     case {t, l, r} do
       {:add, {:num, 0}, r} -> r
       {:add, l, {:num, 0}} -> l
-      {:mul, {:num, 0}, r} -> {:num, 0}
-      {:mul, l, {:num, 0}} -> {:num, 0}
-      {:pow, l, {:num, 0}} -> {:num, 1}
+      {:mul, {:num, 0}, _} -> {:num, 0}
+      {:mul, _, {:num, 0}} -> {:num, 0}
+      {:mul, {:num, 1}, r} -> r
+      {:mul, l, {:num, 1}} -> l
+      {:div, {:num, 0}, _} -> {:num, 0}
+      {:div, _, {:num, 0}} -> {:num, 0}
+      {:pow, _, {:num, 0}} -> {:num, 1}
 
       #Recursive step
       {a, b, c} -> cond do
@@ -50,7 +93,7 @@ defmodule Main do
   # ADD SIN AND SUCH!
   def eval({t, x}) do {t, x} end
 
-  def simpl(x) do remove_zeros(eval(x)) end
+  def simpl(x) do same_coeff(remove_zeros(eval(x))) end
 
 
   def mul({:num, 1}, x) do x end
@@ -86,23 +129,20 @@ defmodule Main do
   def deriv({:var, v}, v) do {:num, 1} end
   def deriv({:var, _}, _) do {:num, 0} end # Är det 0?
   def deriv({:add, l, r}, v) do
-    #{:add, deriv(l, v), deriv(r, v)}
     add(deriv(l, v), deriv(r, v))
   end
   def deriv({:mul, f, g}, v) do
-    #{:add, {:mul, deriv(f, v), g}, {:mul, {f}, deriv(g, v)}}
     add(mul(deriv(f, v), g), mul(f, deriv(g, v)))
   end
 
-  # x^n
+  # f(x) = g(x)^n
   def deriv({:pow, f, n}, v) do
-    #chain({:mul, n, {:pow, f, {:add, n, {:num, -1}}}}, f, v)
     chain(mul(n, pow(f, add(n, {:num, -1}))), f, v)
   end
 
-  # ln(x)
-  def deriv({:ln, x}, v) do
-    divv({:num, 1}, x)
+  # ln(g(x))
+  def deriv({:ln, g}, v) do
+    chain(divv({:num, 1}, g), g, v)
   end
 
   # f/g
@@ -111,8 +151,10 @@ defmodule Main do
   end
 
   # Sin med kedjeregel
-  def deriv({:sin, f}, v) do
-    mul({:cos, f}, deriv(f, v))
+  # sin(g(x)) = f(x)
+  def deriv({:sin, g}, v) do
+    #mul({:cos, f}, deriv(f, v))
+    chain({:cos, g}, g, v)
   end
 
 end
