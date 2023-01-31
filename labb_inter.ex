@@ -57,7 +57,6 @@ defmodule Env do
   #   Skapa en ny env där endast de fria variablernas
   #   bindningar finns kvar
   def closure(free, env) do
-    #IO.puts("env = #{env}")
     closure(free, env, new())
   end
 
@@ -67,8 +66,8 @@ defmodule Env do
 
   def closure([h|t], bindings, new_env) do
     case lookup(h, bindings) do
+      nil -> :error #closure(t, bindings, new_env)
       {k, v} -> closure(t, bindings, add(k, v, new_env))
-      nil -> closure(t, bindings, new_env)
     end
   end
 
@@ -135,12 +134,16 @@ defmodule Eager do
 
   def eval_cls([{:clause, ptr, seq} | cls], str, env) do
     # Två tomma rader här
-    # Försöker ha lura oss eller?
-    case eval_match(ptr, str, env) do
+    # Försöker han lura oss eller?
+    IO.puts("Fail här?")
+    # EVAL SCOPRE --->
+    case eval_match(ptr, str, eval_scope(ptr, env)) do
+      #case eval_match(ptr, str, env) do
       :fail ->
         eval_cls(cls, str, env)
       {:ok, new_env} ->
-        eval_seq(seq, new_env) # GIssning
+        IO.puts("kom till 144")
+        eval_seq(seq, new_env) # Gissning
     end
   end
 
@@ -155,63 +158,78 @@ defmodule Eager do
   # {:apply, expression, arguments}
 
   def eval_expr({:lambda, par, free, seq}, env) do
-    case Env.closure(free, env) do
+    case Env.closure(free, env) do # Env.closure är fel!!!
       :error ->
         :error
       closure ->
-        {:ok, {:closure, par, seq, closure}} # Kolla definition, tror det är rätt
+        {:ok, {:closure, par, seq, closure}} # par är fel!!!
     end
   end
 
   def eval_expr({:apply, expr, args}, env) do
-    case eval_expr(expr, env) do
+    # Expr = {:fun, :append} ???
+    # env  =  x: :a
+    # args = [var: :x, var: :y]
+    IO.puts("222")
+    #IO.puts("ENV222 = #{args}")
+    # env  = 100% korrekt
+    # expr = 100% korrekt
+    # args = 100% korrekt
+    case eval_expr(expr, env) do # <--- seq som returneras är fel
       :error ->
+        IO.puts("Failed 176")
         :error
       {:ok, {:closure, par, seq, closure}} ->
-        #case eval_args(par, closure) do # Kanske fel
-        case eval_args(par, args) do # Kanske rätt?
+        IO.puts("179")
+        IO.puts("closure = #{closure}")
+        # Closure ska vara ett environment!!!
+        case eval_args(args, env) do # Kanske rätt?
           :error ->
+            IO.puts("ERROR HÄR!")
             :error
           {:ok, strs} ->
+            IO.puts("187")
             env = Env.args(par, strs, closure)
+            #IO.puts("seq = #{seq}")
             eval_seq(seq, env)
         end
+      _ -> :error
     end
   end
 
+  def eval_expr({:fun, id}, env) do # <-- tidigaste felet i kedjan
+    # par = 100% rätt
+    #
+    IO.puts("EVAL FUN FUNCTION!")
+    {par, seq} = apply(Prgm, id, [])
+    #IO.puts("seq = #{seq}")
+    {:ok, {:closure, par, seq, []}}
+  end
 
   # OBS strs är en lista av datastructures
   # Som matcher argumenten !!!
 
+  # :ok felet är här någonstans!!!
 
-  def eval_args_([p|para], [a|args]) do
-    #{kk, vv} = a
-    #IO.puts("p = #{p} | a = {#{kk}, #{vv}}")
-    case eval([{:match, {:var, p}, a}, {:var, p}]) do
-      {:ok, res} -> [res|eval_args_(para, args)]
-      :error -> :error
+  def eval_args(exprs, env) do
+    case eval_args(exprs, [], env) do
+      :erro -> :error
+      strs ->
+        {:ok, Enum.reverse(strs)}
+
     end
   end
 
-  def eval_args_(_, _) do [] end
-
-  def eval_args(para, args) do
-    #print_all(para)
-    #print_all(args)
-    {:ok, eval_args_(para, args)}
+  def eval_args([e|exprs], strs, env) do
+    #IO.puts("e = #{env}")
+    case eval_expr(e, env) do # <-- fails here
+      :error ->
+        #IO.puts("e = #{env}")
+        :error
+      {:ok, str} -> eval_args(exprs, [str|strs], env)
+    end
   end
-
-
-
-  def print_all([]) do IO.puts("Done") end
-  def print_all([{k, v}|str]) do
-    IO.puts("{#{k}, #{v}}")
-    print_all(str)
-  end
-  def print_all([c|str]) do
-    IO.puts(c)
-    print_all(str)
-  end
+  def eval_args([], strs, _) do strs end
 
   # seq =
   #   [
@@ -274,6 +292,11 @@ defmodule Eager do
   end
 
 
+  # TEST?
+  #def eval_seq([], env) do
+  #  :error
+  #end
+
   def eval_seq([exp], env) do
     eval_expr(exp, env)
   end
@@ -286,6 +309,7 @@ defmodule Eager do
         :error # Gissning
       {:ok, str} ->
         new_scope = eval_scope(pat, env)
+        IO.puts("kom till 301")
         case eval_match(pat, str, new_scope) do
           :fail -> :error
           {:ok, n_env} -> eval_seq(t, n_env) # Gissning 50%
@@ -298,7 +322,7 @@ defmodule Eager do
     eval_seq(seq, [])
   end
 
-  # Resten av uppgiften kommer att ta ~2h
+  # Resten av uppgiften kommer att ta ~2h, UPDATE: tog 4h
 
   # Tests
   #seq = [
@@ -315,6 +339,22 @@ defmodule Eager do
 
 end
 
-defmodule Interpreter do
+defmodule Prgm do
+
+  def append() do
+    {[:x, :y],
+      [{:case, {:var, :x},
+        [ {:clause, {:atm, []}, [{:var, :y}]},
+          {:clause, {:cons, {:var, :hd}, {:var, :tl}},
+            [{:cons,
+              {:var, :hd},
+              #{:call, :append, [{:var, :tl}, {:var, :y}]}
+              # WTF menar can med :call :append?
+              {:apply, {:fun, :append}, [{:var, :tl}, {:var, :y}]}
+            }]
+        }]
+      }]
+    }
+  end
 
 end
