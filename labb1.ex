@@ -13,111 +13,106 @@ defmodule Main do
   # OBS! LÖSNINGEN PÅ VÄRLDENS ALLA PROBLEM ÄR ATT REKURSIVT KALLA
   # PÅ SIG SJÄLV NÄR EN ÄNDRIGNG GÖRS?
 
-  def same_coeff({t, l, r}) do
-    case {t, l, r} do
-      #a+a = 2a
-      {:add, a, a} -> {:mul, {:num, 2}, a}
-
-      # a*a = a^2
-      {:mul, a, a} -> same_coeff({:pow, a, {:num, 2}})
-
-      {:pow, {:pow, a, p1}, p2} -> same_coeff({:pow, a, mul(p1, p2)})
-
-      # ax+bx = (a+b)x
-      {:add, {:mul, a, x}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
-      {:add, {:mul, a, x}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
-      {:add, {:mul, x, a}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
-      {:add, {:mul, x, a}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
-
-
-      {:add, {:mul, a, x}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
-      {:add, {:mul, a, x}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
-      {:add, {:mul, x, a}, {:mul, b, x}} -> {:mul, eval({:add, a, b}), x}
-      {:add, {:mul, x, a}, {:mul, x, b}} -> {:mul, eval({:add, a, b}), x}
-
-      #Recursive step
-      {a, b, c} -> cond do
-        same_coeff(b) != b or same_coeff(c) != c -> # if updated
-        same_coeff({a, same_coeff(b), same_coeff(c)})
-        true ->
-          {a, same_coeff(b), same_coeff(c)}
-        end
-    end
-  end
-
-  # OBS! lös detta problemet för de två andra också!
-  def same_coeff({a, b}) do {a, same_coeff(b)} end
-  def same_coeff(a) do a end
-
-  def remove_zeros({t, l, r}) do
-    case {t, l, r} do
-      {:add, {:num, 0}, r} -> r
-      {:add, l, {:num, 0}} -> l
-      {:mul, {:num, 0}, _} -> {:num, 0}
-      {:mul, _, {:num, 0}} -> {:num, 0}
-      {:mul, {:num, 1}, r} -> r
-      {:mul, l, {:num, 1}} -> l
-      {:div, {:num, 0}, _} -> {:num, 0}
-      {:div, _, {:num, 0}} -> {:num, 0}
-      {:pow, _, {:num, 0}} -> {:num, 1}
-
-      #Recursive step
-      {a, b, c} -> cond do
-        remove_zeros(b) != b or remove_zeros(c) != c -> # if updated
-        remove_zeros({a, remove_zeros(b), remove_zeros(c)})
-        true ->
-          {a, remove_zeros(b), remove_zeros(c)}
-      end
-
-    end
-  end
-
-  def remove_zeros({t, l}) do {t, l} end
-
-  def eval({t, l, r}) do
-    case {t, l, r} do
-      #Evaluation
-      {:add, {:num, v1}, {:num, v2}} -> add({:num, v1}, {:num, v2})
-      {:mul, {:num, v1}, {:num, v2}} -> mul({:num, v1}, {:num, v2})
-      {:pow, {:num, v1}, {:num, v2}} -> pow({:num, v1}, {:num, v2})
-      {:div, {:num, v1}, {:num, v2}} -> divv({:num, v1}, {:num, v2})
-      {a, b, c} -> cond do
-        eval(b) != b or eval(c) != c -> # if updated
-          eval({a, eval(b), eval(c)})
-        true -> # else
-          {a, eval(b), eval(c)}
-      end
-    end
-  end
-
   # ADD SIN AND SUCH!
   def eval({t, x}) do {t, x} end
 
-  def simpl(x) do same_coeff(remove_zeros(eval(x))) end
+  #def simpl(x) do same_coeff(remove_zeros(eval(x))) end
 
-
-  def mul({:num, 1}, x) do x end
-  def mul(x, {:num, 1}) do x end
-#
-  def mul({:num, 0}, _) do {:num, 0} end
-  def mul(_, {:num, 0}) do {:num, 0} end
-#
-  def mul({:num, l}, {:num, r}) do {:num, l*r} end
   def mul(l, r) do {:mul, l, r} end
-#
-  def divv({:num, l}, {:num, r}) do {:num, l/r} end
+
   def divv(x, y) do {:div, x, y} end
-#
-  def add({:num, 0}, x) do x end
+
+
   def add(x, {:num, 0}) do x end
-#
-  def add({:num, l}, {:num, r}) do {:num, l+r} end
+
   def add(l, r) do {:add, l, r} end
 
-  def pow({:num, x}, {:num, n}) do {:num, :math.pow(x, n)} end
-  def pow(x, {:num, 1}) do x end
-  def pow(_, {:num, 0}) do {:num, 0} end
   def pow(x, n) do {:pow, x, n} end
+
+  def simplify({type, x, y}) do
+    case type do
+      :add -> simplify_add(simplify(x), simplify(y))
+      :mul -> simplify_mul(simplify(x), simplify(y))
+      :pow -> simplify_pow(simplify(x), simplify(y))
+      :div -> simplify_div(simplify(x), simplify(y))
+      true -> {type, x, y}
+    end
+  end
+
+  def simplify({type, x}) do
+    case type do
+      :num -> {type, x}
+      :var -> {type, x}
+      :sin -> {type, simplify(x)}
+      :cos -> {type, simplify(x)}
+      :ln  -> simplify_ln(simplify(x))
+      type -> {type, x}
+    end
+  end
+
+  def simplify_add(x, y) do
+    case {x, y} do
+      {{:num, 0}, y1} -> y1
+      {x1, {:num, 0}} -> x1
+      {{:num, a}, {:num, b}} -> {:num, a+b}
+
+      # a + (:x + b) = :x + (a+b)
+      {{:add, x1, {:num, n1}}, {:num, n2}} -> simplify_add(x1, {:num, n1+n2})
+      {{:num, n2}, {:add, x1, {:num, n1}}} -> simplify_add(x1, {:num, n1+n2})
+
+      {{:add, {:num, n1}, x1}, {:num, n2}} -> simplify_add(x1, {:num, n1+n2})
+      {{:num, n2}, {:add, {:num, n1}, x1}} -> simplify_add(x1, {:num, n1+n2})
+
+      {x, y} -> {:add, x, y}
+    end
+  end
+
+  def simplify_mul(x, y) do
+    case {x, y} do
+      # 0*x
+      {{:num, 0}, _} -> {:num, 0}
+      {_, {:num, 0}} -> {:num, 0}
+
+      # 1*x
+      {x1, {:num, 1}} -> x1
+      {{:num, 1}, y1} -> y1
+
+      # x * x^a = x^(a+1)
+      {a, {:pow, a, n}} -> {:pow, x, simplify_add({:num, 1}, n)}
+
+      {{:num, a}, {:num, b}} -> {:num, a*b}
+      {x, y} -> {:mul, x, y}
+    end
+  end
+
+  def simplify_div(x, y) do
+    case {x, y} do
+      {x1, {:num, 1}} -> x1
+      {{:num, n1}, {:num, n2}} -> {:num, n1/n2}
+      # Kan lägga till att ta bort multiplar av x exempelvis
+      {x, y} -> {:div, x, y}
+    end
+  end
+
+  def simplify_pow(x, y) do
+    case {x, y} do
+      {{:num, 0}, _} -> {:num, 0}
+      {{:num, 1}, _} -> {:num, 1}
+      {_, {:num, 0}} -> {:num, 1}
+      {y1, {:num, 1}} -> y1
+      {{:num, n1}, {:num, n2}} -> {:num, :math.pow(n1, n2)}
+      {x, y} -> {:pow, x, y}
+    end
+  end
+
+  def simplify_ln(x) do
+    case x do
+      {:num, n} -> {:num, :math.log(n)}
+      {:pow, x1, y1} -> {:mul, y1, {:ln, x1}}
+      x -> {:ln, x}
+    end
+  end
+
 
   # CHAIN RULE
   def chain(f_prim, g, v) do
@@ -136,8 +131,8 @@ defmodule Main do
   end
 
   # f(x) = g(x)^n
-  def deriv({:pow, f, n}, v) do
-    chain(mul(n, pow(f, add(n, {:num, -1}))), f, v)
+  def deriv({:pow, g, n}, v) do
+    chain(mul(n, pow(g, add(n, {:num, -1}))), g, v)
   end
 
   # ln(g(x))
@@ -157,6 +152,31 @@ defmodule Main do
     chain({:cos, g}, g, v)
   end
 
+  def deriv({:sqrt, g}, v) do
+    deriv({:pow, g, {:div, {:num, 1}, {:num, 2}}}, v)
+  end
+
+  def pprint(expr) do
+    IO.puts(pprint_(expr))
+  end
+
+  def pprint_(expr) do
+    case expr do
+       {:add, x, y} -> "(#{pprint_(x)} + #{pprint_(y)})"
+       {:mul, x, y} -> "(#{pprint_(x)} * #{pprint_(y)})"
+       {:div, x, y} -> "(#{pprint_(x)} / #{pprint_(y)})"
+       {:pow, x, y} -> "(#{pprint_(x)} ^ #{pprint_(y)})"
+       {:var, x} -> "#{x}"
+       {:num, x} -> "#{x}"
+       {:sin, x} -> "sin(#{pprint_(x)})"
+       {:cos, x} -> "cos(#{pprint_(x)})"
+       {:ln, x} -> "ln(#{pprint_(x)})"
+       x -> "#{x}"
+    end
+  end
+
 end
+
+
 
 #
