@@ -128,7 +128,19 @@ defmodule Eval do
     def eval({:div, a1, a2}, env) do
       simpl(div_(eval(a1, env), eval(a2, env)))
     end
+    def eval({:q, l, r}, env) do {:q, l, r} end
 
+    #Exempel
+    #{:add, {:add, {:mul, {:num, 2}, {:var, :x}}, {:num, 3}}, {:q, 1, 2}}
 
+Eval.eval(
+{:div,
+    {:div,
+        {:div, {:var, x}, {:var, :y}},
+        {:div, {:var, y}, {:var, z}}
+    },
+    {:div, {:q, 17, 13}, {:q, 77, 23}}
+},
+Eval.new_env([{:x, 1}, {:y, 10}, {:z, 100}]))
 
 end

@@ -309,7 +309,6 @@ defmodule Eager do
         :error # Gissning
       {:ok, str} ->
         new_scope = eval_scope(pat, env)
-        IO.puts("kom till 301")
         case eval_match(pat, str, new_scope) do
           :fail -> :error
           {:ok, n_env} -> eval_seq(t, n_env) # Gissning 50%
@@ -336,6 +335,15 @@ defmodule Eager do
   #  {:match, {:var, :y}, {:cons, {:var, :x}, {:atm, :b}}},
   #  {:match, {:cons, :ignore, {:var, :z}}, {:var, :y}},
   #  {:var, :z}]
+
+  seq =
+    [
+      {:match, {:var, :x}, {:atm,:a}}, # x = :a
+      {:match, {:var, :y}, {:cons, {:var, :x}, {:atm, :b}}}, #y = {:a, :b}
+      {:match, {:cons, :ignore, {:var, :z}}, {:var, :y}}, # {_, z} = {a, b}
+      {:var, :z}
+  ]
+
 
 end
 
