@@ -136,8 +136,8 @@ defmodule Eval do
 Eval.eval(
 {:div,
     {:div,
-        {:div, {:var, x}, {:var, :y}},
-        {:div, {:var, y}, {:var, z}}
+        {:div, {:var, :x}, {:var, :y}},
+        {:div, {:var, :y}, {:var, :z}}
     },
     {:div, {:q, 17, 13}, {:q, 77, 23}}
 },
