@@ -1,22 +1,20 @@
 defmodule Hanoi do
 
-  #Base case
-  def hanoi(0, _, _, _) do
-    []
-  end
+  # Basfall
+  def hanoi(0, _, _, _) do [] end
 
   def hanoi(n, from, aux, to) do
-    # Move tower of size n-1 times from "from" to "aux" rekursivt såklart
-    toAux = hanoi(n-1, from, to, aux)
-    #toAux = doNTimes({:move, from, aux}, n-1)
-    ## move one from "from" to "to"
-    toTo = [{:move, from, to}]
+    # Flytta rekursivt ett torn av storleken n-1 från "from" till "aux"
+    s1 = hanoi(n-1, from, to, aux)
 
-    # Move tower of size n-1
-    recersiveStep = hanoi(n-1, aux, from, to) # Verkar lite knas?
+    # Flytta ett block från "from" till "to"
+    s2 = [{:move, from, to}]
 
-    # Return
-    (toAux ++ toTo) ++ recersiveStep
+    # Flytta rekurisvt ett torn av storleken n-1 från "aux" till "to"
+    s3 = hanoi(n-1, aux, from, to)
+
+    # Sätt ihop dragen i rätt ordning och returnera
+    (s1 ++ s2) ++ s3
 
   end
 
