@@ -104,7 +104,7 @@ defmodule High do
   end
 
   def even(list) do
-    filter(list, fn(e) -> rem(e, 2)==1 end)
+    filter(list, fn(e) -> rem(e, 2)==0 end)
   end
 
   def greater_than_five(list) do
