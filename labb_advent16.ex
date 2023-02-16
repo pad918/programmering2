@@ -42,6 +42,10 @@ defmodule Day16 do
     # Beräkna hur mycket tryck som släpptes i senaste minuten
     rate = total_pressure_release(taps_on, graph)
 
+    # OBS!!! Borde inte vara allt för svårt
+    # att lägga till detta som ett extrafall i legal
+    # och göra allt i samma if-else
+
     # Försök bara när det är nödvändigt
     turn_on_tap_move =
     if(Map.has_key?(closed_taps, curr)) do
@@ -107,7 +111,7 @@ defmodule Day16 do
     if(cached_result != nil) do
 
       {best_moves, released} = cached_result
-      {best_moves, released, cache} # Rätt? är + rate rätt?
+      {best_moves, released, cache}
     else
       search_path(curr, moves, graph, time_left, closed_taps, cache)
     end

@@ -4,8 +4,9 @@ defmodule Advent4 do
     rows
   end
 
-  def parse(stream) do
-    Enum.reduce(stream, [],
+  def parse(path) do
+    rows = File.stream!(path)
+    Enum.reduce(rows, [],
       fn(row, acc) ->
 
         #Splitta upp raden
