@@ -4,7 +4,10 @@ defmodule Day16 do
     start = :AA
     rows = File.stream!("advent16_input.txt")
     #rows = sample()
-    parsed_map = get_graph_map(parse(rows))
+    #parsed_map = get_graph_map(parse(rows))
+    parsed_map = Map.new(parse(rows))
+
+
 
     closed_taps = Map.new(Enum.filter(parsed_map,
       fn(x) ->
@@ -47,54 +50,53 @@ defmodule Day16 do
     # och göra allt i samma if-else
 
     # Försök bara när det är nödvändigt
-    turn_on_tap_move =
+    legal =
     if(Map.has_key?(closed_taps, curr)) do
-      optimize_path(curr, [{:on, curr}|moves], graph, time_left-1, Map.put(closed_taps, curr, curr), cache)
+      [{:on, curr}|legal]
     else
-      {[], 0, cache}
+      legal
     end
-    {_, _, new_cache} = turn_on_tap_move
 
 
     # Testa att gå alla andra möjliga vägar
-    best_move = Enum.reduce(legal, {[], nil, -10, new_cache},
-      fn(kran, acc) ->
+    best_move = Enum.reduce(legal, {[], nil, -1, cache},
+      fn(drag, acc) ->
         {_, _, _, new_cache} = acc
-        {best_moves, value, new_cache} = optimize_path(kran, [{:move, kran}|moves], graph, time_left-1, closed_taps, new_cache)
+        {best_move, best_moves, value, new_cache} =
+          case drag do
+            {:on, turn_on} ->
+              {best_moves, value, new_cache} =
+                optimize_path(curr, [{:on, turn_on}|moves], graph, time_left-1, Map.put(closed_taps, turn_on, turn_on), new_cache)
+              #new_cache = Map.put(new_cache, {kran, time_left-1, taps_on}, {best_moves, value})
+              {{:on, turn_on}, best_moves, value, new_cache}
+            kran ->
+              {best_moves, value, new_cache} =
+                optimize_path(kran, [{:move, kran}|moves], graph, time_left-1, closed_taps, new_cache)
+              new_cache = Map.put(new_cache, {kran, time_left-1, taps_on}, {best_moves, value})
+              {{:move, kran}, best_moves, value, new_cache}
+          end
 
         # Add cache entry to new cache
         # cache_self_release = value-((time_left-1)*rate)
-        new_cache = Map.put(new_cache, {kran, time_left-1, taps_on}, {best_moves, value})
-        new_acc = {best_moves, kran, value + rate, new_cache} # FEL? OSÄKER på +rate
+
+        new_acc = {best_moves, best_move, value + rate, new_cache} # FEL? OSÄKER på +rate
 
         {_,_, new_value, new_cache} = new_acc
 
         # Update acc if better
-        {a_moves, a_kran, a_max, _} = acc
+        {a_moves, a_best_move, a_max, _} = acc
         if(a_max<new_value) do
           new_acc
         else
           #Update the cache of acc
-          {a_moves, a_kran, a_max, new_cache}
+          {a_moves, a_best_move, a_max, new_cache}
         end
       end
     )
 
-    {_, _, best_move_realeased, new_cache} = best_move
-    {_, turn_on_released, _} = turn_on_tap_move
-    turn_on_released = turn_on_released + rate
+    {best_future_moves, move, value, new_cache} = best_move
+    {[move | best_future_moves], value, new_cache}
 
-    # LÄGG ÄVEN TILL DET NYA MOVET!!!
-    if(best_move_realeased >= turn_on_released) do
-      {best_future_moves, kran, value, _} = best_move
-      {[{:move, kran} | best_future_moves], best_move_realeased, new_cache}
-    else
-      {best_future_moves, _, _} = turn_on_tap_move
-      # Lägg till i cachen
-      # new_cache = Map.put(new_cache, {curr, time_left, taps_on}, {best_future_moves, turn_on_released})
-
-      {[{:on,   curr} | best_future_moves], turn_on_released, new_cache} # måste adda rate här!
-    end
   end
 
 
