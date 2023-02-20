@@ -38,28 +38,14 @@ defmodule Day16 do
 
   def search_path(curr, moves, graph, time_left, closed_taps, cache) do
     # Testa alla möjligheter och välj den bästa!
-    legal = get_legal_moves(curr, graph)
+    legal = get_legal_moves(curr, graph, closed_taps)
 
     taps_on = get_open_taps(moves)
 
-    # Beräkna hur mycket tryck som släpptes i senaste minuten
     rate = total_pressure_release(taps_on, graph)
 
-    # OBS!!! Borde inte vara allt för svårt
-    # att lägga till detta som ett extrafall i legal
-    # och göra allt i samma if-else
-
-    # Försök bara när det är nödvändigt
-    legal =
-    if(Map.has_key?(closed_taps, curr)) do
-      [{:on, curr}|legal]
-    else
-      legal
-    end
-
-
     # Testa att gå alla andra möjliga vägar
-    best_move = Enum.reduce(legal, {[], nil, -1, cache},
+    best_move = Enum.reduce(legal, {[], {:on, curr}, 0, cache},
       fn(drag, acc) ->
         {_, _, _, new_cache} = acc
         {best_move, best_moves, value, new_cache} =
@@ -98,7 +84,6 @@ defmodule Day16 do
     {[move | best_future_moves], value, new_cache}
 
   end
-
 
   # Två typer av moves:
 
@@ -179,10 +164,15 @@ defmodule Day16 do
     end
   end
 
-  def get_legal_moves(curr, graph) do
+  def get_legal_moves(curr, graph, closed_taps) do
     case graph[curr] do
       nil -> []
-      {_, list} -> list
+      {_, list} ->
+        if(Map.has_key?(closed_taps, curr)) do
+          [{:on, curr}|list]
+        else
+          list
+        end
     end
   end
 
