@@ -1,0 +1,568 @@
+Arendt joined the server
+Hypatia joined the server
+Arendt is dreaming, has to eats 5 more times
+Simone joined the server
+Hypatia is dreaming, has to eats 5 more times
+Elisabeth joined the server
+Simone is dreaming, has to eats 5 more times
+Ayn joined the server
+Elisabeth is dreaming, has to eats 5 more times
+Ayn is dreaming, has to eats 5 more times
+Arendt is reqesting chopsticks, async
+Stick locked ...
+#PID<0.647.0>
+Stick locked ...
+#PID<0.646.0>
+Arendt is eating
+Hypatia is reqesting chopsticks, async
+Stick locked ...
+#PID<0.648.0>
+Ayn is reqesting chopsticks, async
+Simone is reqesting chopsticks, async
+Stick locked ...
+#PID<0.649.0>
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Arendt returned her sticks
+Stick ... was returned
+#PID<0.646.0>
+Stick ... was returned
+#PID<0.647.0>
+Arendt is dreaming, has to eats 4 more times
+Stick locked ...
+#PID<0.647.0>
+Hypatia is eating
+Stick locked ...
+#PID<0.646.0>
+Hypatia returned her sticks
+Stick ... was returned
+#PID<0.647.0>
+Stick ... was returned
+#PID<0.648.0>
+Hypatia is dreaming, has to eats 4 more times
+Stick locked ...
+#PID<0.648.0>
+Simone is eating
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Elisabeth did NOT eat
+Are the sticks alive?
+Stick locked ...
+true
+#PID<0.650.0>
+true
+Ayn is eating
+Elisabeth is dreaming, has to eats 5 more times
+Ayn returned her sticks
+Stick ... was returned
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.646.0>
+Ayn is dreaming, has to eats 4 more times
+Arendt is reqesting chopsticks, async
+Stick locked ...
+#PID<0.647.0>
+Stick locked ...
+#PID<0.646.0>
+Arendt is eating
+Simone returned her sticks
+Stick ... was returned
+#PID<0.648.0>
+Stick ... was returned
+#PID<0.649.0>
+Simone is dreaming, has to eats 4 more times
+Hypatia is reqesting chopsticks, async
+Stick locked ...
+#PID<0.648.0>
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick locked ...
+#PID<0.649.0>
+Elisabeth is eating
+Ayn is reqesting chopsticks, async
+Arendt returned her sticks
+Stick ... was returned
+#PID<0.646.0>
+Stick ... was returned
+#PID<0.647.0>
+Stick locked ...
+Arendt is dreaming, has to eats 3 more times
+Stick locked ...
+#PID<0.647.0>
+#PID<0.646.0>
+Hypatia is eating
+Elisabeth returned her sticks
+Simone is reqesting chopsticks, async
+Stick ... was returned
+#PID<0.649.0>
+Stick ... was returned
+#PID<0.650.0>
+Elisabeth is dreaming, has to eats 4 more times
+Stick locked ...
+#PID<0.650.0>
+Ayn is eating
+Arendt is reqesting chopsticks, async
+Hypatia returned her sticks
+Stick ... was returned
+#PID<0.647.0>
+Stick ... was returned
+Stick locked ...
+#PID<0.648.0>
+Hypatia is dreaming, has to eats 3 more times
+#PID<0.647.0>
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick locked ...
+#PID<0.648.0>
+Stick ... was returned
+#PID<0.648.0>
+!!!!!!!!!!!!!!!!!!!!!! Simone did NOT eat
+Are the sticks alive?
+true
+true
+Simone is dreaming, has to eats 4 more times
+Stick ... was returned
+#PID<0.647.0>
+!!!!!!!!!!!!!!!!!!!!!! Arendt did NOT eat
+Are the sticks alive?
+true
+true
+Arendt is dreaming, has to eats 3 more times
+Hypatia is reqesting chopsticks, async
+Stick locked ...
+#PID<0.648.0>
+Stick locked ...
+#PID<0.647.0>
+Hypatia is eating
+Ayn returned her sticks
+Stick ... was returned
+#PID<0.650.0>
+Stick ... was returned
+Stick locked ...
+#PID<0.646.0>
+#PID<0.649.0>
+Ayn is dreaming, has to eats 3 more times
+Elisabeth is eating
+Hypatia returned her sticks
+Stick ... was returned
+#PID<0.647.0>
+Stick ... was returned
+#PID<0.648.0>
+Hypatia is dreaming, has to eats 2 more times
+Arendt is reqesting chopsticks, async
+Stick locked ...
+#PID<0.647.0>
+Stick locked ...
+#PID<0.646.0>
+Arendt is eating
+Simone is reqesting chopsticks, async
+Elisabeth returned her sticks
+Stick ... was returned
+#PID<0.649.0>
+Stick ... was returned
+#PID<0.650.0>
+Stick locked ...
+Elisabeth is dreaming, has to eats 3 more times
+#PID<0.649.0>
+Stick locked ...
+#PID<0.648.0>
+Simone is eating
+Ayn is reqesting chopsticks, async
+Arendt returned her sticks
+Stick ... was returned
+#PID<0.646.0>
+Stick ... was returned
+#PID<0.647.0>
+Arendt is dreaming, has to eats 2 more times
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Arendt is reqesting chopsticks, async
+Stick locked ...
+#PID<0.647.0>
+Stick locked ...
+#PID<0.646.0>
+Arendt is eating
+Arendt returned her sticks
+Stick ... was returned
+#PID<0.646.0>
+Stick ... was returned
+#PID<0.647.0>
+Stick locked ...
+Arendt is dreaming, has to eats 1 more times
+#PID<0.646.0>
+Arendt is reqesting chopsticks, async
+Stick locked ...
+#PID<0.647.0>
+Hypatia is reqesting chopsticks, async
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Elisabeth did NOT eat
+Are the sticks alive?
+true
+Stick locked ...
+true
+#PID<0.650.0>
+Ayn is eating
+Elisabeth is dreaming, has to eats 3 more times
+Simone returned her sticks
+Stick ... was returned
+#PID<0.648.0>
+Stick ... was returned
+#PID<0.649.0>
+Stick locked ...
+Simone is dreaming, has to eats 3 more times
+#PID<0.648.0>
+Simone is reqesting chopsticks, async
+Stick ... was returned
+#PID<0.647.0>
+!!!!!!!!!!!!!!!!!!!!!! Arendt did NOT eat
+Are the sticks alive?
+true
+true
+Stick locked ...
+Arendt is dreaming, has to eats 1 more times
+#PID<0.647.0>
+Hypatia is eating
+Hypatia returned her sticks
+Stick ... was returned
+#PID<0.647.0>
+Stick ... was returned
+#PID<0.648.0>
+Hypatia is dreaming, has to eats 1 more times
+Hypatia is reqesting chopsticks, async
+Stick locked ...
+#PID<0.648.0>
+Stick locked ...
+#PID<0.647.0>
+Hypatia is eating
+Hypatia returned her sticks
+Stick ... was returned
+#PID<0.647.0>
+Stick ... was returned
+#PID<0.648.0>
+--------------- Hypatia yeeted out ---------------
+Stick locked ...
+#PID<0.648.0>
+Stick ... was returned
+#PID<0.648.0>
+!!!!!!!!!!!!!!!!!!!!!! Simone did NOT eat
+Are the sticks alive?
+true
+true
+Simone is dreaming, has to eats 3 more times
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Arendt is reqesting chopsticks, async
+Stick locked ...
+#PID<0.647.0>
+Simone is reqesting chopsticks, async
+Ayn returned her sticks
+Stick ... was returned
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.646.0>
+Stick locked ...
+Stick locked ...
+Ayn is dreaming, has to eats 2 more times
+#PID<0.646.0>
+#PID<0.649.0>
+Arendt is eating
+Elisabeth is eating
+Elisabeth returned her sticks
+Stick ... was returned
+#PID<0.649.0>
+Stick ... was returned
+Stick locked ...
+#PID<0.650.0>
+Elisabeth is dreaming, has to eats 2 more times
+#PID<0.649.0>
+Stick locked ...
+#PID<0.648.0>
+Simone is eating
+Simone returned her sticks
+Stick ... was returned
+#PID<0.648.0>
+Stick ... was returned
+#PID<0.649.0>
+Simone is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Simone is reqesting chopsticks, async
+Arendt returned her sticks
+Stick locked ...
+Stick ... was returned
+#PID<0.650.0>
+#PID<0.646.0>
+Stick ... was returned
+Stick ... was returned
+#PID<0.650.0>
+#PID<0.647.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+--------------- Arendt yeeted out ---------------
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick locked ...
+#PID<0.649.0>
+Elisabeth is eating
+Stick locked ...
+#PID<0.648.0>
+Stick ... was returned
+#PID<0.648.0>
+!!!!!!!!!!!!!!!!!!!!!! Simone did NOT eat
+Are the sticks alive?
+true
+true
+Simone is dreaming, has to eats 2 more times
+Elisabeth returned her sticks
+Stick ... was returned
+#PID<0.649.0>
+Stick ... was returned
+#PID<0.650.0>
+Elisabeth is dreaming, has to eats 1 more times
+Ayn is reqesting chopsticks, async
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Simone is reqesting chopsticks, async
+Stick locked ...
+#PID<0.649.0>
+Stick locked ...
+#PID<0.648.0>
+Simone is eating
+Stick ... was returned
+Simone returned her sticks
+#PID<0.650.0>
+Stick ... was returned
+!!!!!!!!!!!!!!!!!!!!!! Elisabeth did NOT eat
+#PID<0.648.0>
+Are the sticks alive?
+Stick ... was returned
+Stick locked ...
+true
+#PID<0.649.0>
+Simone is dreaming, has to eats 1 more times
+#PID<0.650.0>
+true
+Stick ... was returned
+Elisabeth is dreaming, has to eats 1 more times
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Simone is reqesting chopsticks, async
+Elisabeth is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick locked ...
+#PID<0.649.0>
+Elisabeth is eating
+Elisabeth returned her sticks
+Stick ... was returned
+#PID<0.649.0>
+Stick ... was returned
+Stick locked ...
+#PID<0.650.0>
+#PID<0.649.0>
+--------------- Elisabeth yeeted out ---------------
+Stick locked ...
+#PID<0.648.0>
+Simone is eating
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Simone returned her sticks
+Stick ... was returned
+#PID<0.648.0>
+Stick ... was returned
+#PID<0.649.0>
+--------------- Simone yeeted out ---------------
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn is dreaming, has to eats 2 more times
+Ayn is reqesting chopsticks, async
+Stick locked ...
+#PID<0.650.0>
+Stick ... was returned
+#PID<0.650.0>
+!!!!!!!!!!!!!!!!!!!!!! Ayn did NOT eat
+Are the sticks alive?
+true
+true
+Ayn starved to death... big sad
+Killing all processes
+Deadlock occured, terminating processes...
