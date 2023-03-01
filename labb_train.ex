@@ -6,15 +6,10 @@ defmodule Train do
     1+len(h)
   end
 
-  def take(_, 0) do
-    []#acc
-  end
+  def take(_, 0) do [] end
 
-  def take([], _) do
-    [] #:error # ? ? ?
-  end
+  def take([], _) do [] end
 
-  #Rec
   def take([h|t], n) do
     [h|take(t, n-1)]
   end
@@ -33,9 +28,7 @@ defmodule Train do
   end
 
   # train1 + train2 = train1 ++ train2 (OBS INGA ++)
-  def append([], train2) do
-    train2
-  end
+  def append([], train2) do train2 end
   def append([h|t], train2) do
     [h|append(t, train2)]
   end
