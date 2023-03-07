@@ -59,7 +59,6 @@ defmodule Train do
   def split(train, y) do
     split_pos = position(train, y)
     len = len(train)
-    #IO.puts("len = #{len}, pos = #{split_pos}")
     t1 = take(train, split_pos-1)
     t2 = drop(train, split_pos)
     {t1, t2}
@@ -100,7 +99,6 @@ defmodule Moves do
       take = Train.take(one, n)
       new_main = Train.append(main, take)
       new_one  = Train.drop(one, n)
-      #IO.puts("INSPECTION = #{inspect({take, new_main, new_one})}")
       {new_main, new_one, two}
     end
   end
@@ -116,7 +114,6 @@ defmodule Moves do
       take = Train.take(two, n)
       new_main = Train.append(main, take)
       new_two  = Train.drop(two, n)
-      #IO.puts("INSPECTION = #{inspect({take, new_main, new_one})}")
       {new_main, one, new_two}
     end
   end
@@ -130,7 +127,6 @@ defmodule Moves do
 
   # Transfrom xs --> ys
   def find([], []) do [] end
-  #def find([x], [x]) do [] end
   def find(xs, ys) do
     [y] = Train.take(ys, 1)
     {hs, ts} = Train.split(xs, y)
@@ -139,8 +135,6 @@ defmodule Moves do
     moves = [{:one, ts_len}, {:two, hs_len}, {:one, -ts_len}, {:two, -hs_len}]
     [_ | new_ys] = ys
     new_xs = Train.append(ts, hs)
-    #moves
-    #IO.puts("xs = #{inspect(new_xs)}, ys = #{inspect(new_ys)}")
     Train.append(moves, find(new_xs, new_ys))
   end
 
@@ -179,14 +173,12 @@ defmodule Moves do
     end
   end
   def rules([h1, h2|t]) do
-    #IO.puts("h1 = #{inspect(h1)}, h2 = #{inspect(h2)}, t= #{inspect(t)}")
     {dir1, n1} = h1
     {dir2, n2} = h2
     #Testa förs 0 fallet
     if(n1==0) do
       rules([h2|t])
     else
-      # Testa om de flyttar till/från samma
       if(dir1==dir2) do
         [{dir1, n1+n2}|rules(t)]
       else
@@ -197,7 +189,6 @@ defmodule Moves do
   end
 
   def compress(ms) do
-    #IO.puts("ms= #{inspect(ms)}")
     ns = rules(ms)
     if(ns==ms) do
       ms
