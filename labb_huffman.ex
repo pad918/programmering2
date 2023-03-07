@@ -1,4 +1,17 @@
 defmodule Huffman do
+
+  def read(file) do
+    {:ok, file} = File.open(file, [:read, :utf8])
+    binary = IO.read(file, :all)
+    File.close(file)
+    case :unicode.characters_to_list(binary, :utf8) do
+      {:incomplete, list, _} ->
+        list
+      list ->
+        list
+    end
+  end
+
   def sample() do
     'the quick brown fox jumps over the lazy dog
     this is a sample text that we will use when we build
@@ -11,11 +24,61 @@ defmodule Huffman do
     'this is something that we should encode'
   end
 
+  def bench_files() do
+    files = [
+      "benchmark_data/sample.txt",
+      "benchmark_data/elixir.txt",
+      "benchmark_data/advent4.txt",
+      "benchmark_data/train.txt",
+      "benchmark_data/filosof.txt",
+      "benchmark_data/czech_covid.txt",
+      "benchmark_data/computer_programming.txt",
+      "benchmark_data/kallocain.txt"
+    ]
+  end
+
+  def bench_all() do
+    files = bench_files()
+    encoded_table = encode_table(tree(read("benchmark_data/advent4.txt")))
+    IO.puts("Basic bench results:")
+    Enum.each(files, fn(file) -> benchmark(file, encoded_table) end)
+  end
+
+  def benchmark(path, encoded_table) do
+    text = read(path)
+    len = length(text)
+    if(len<10000) do
+      {encoding_time, encoded} = :timer.tc(fn -> encode(text, encoded_table) end)
+      {encoding_time_fast, encoded} = :timer.tc(fn -> fast_encode([], text, encoded_table) end)
+      {decoding_time, decoded} = :timer.tc(fn -> decode(encoded, encoded_table) end)
+      IO.puts("#{length(text)}, #{encoding_time/1000}, #{encoding_time_fast/1000}, #{decoding_time/1000}, #{len/1000}, #{:math.pow(len/1000,2)}")
+    else
+      {encoding_time_fast, encoded} = :timer.tc(fn -> fast_encode([], text, encoded_table) end)
+      {decoding_time, decoded} = :timer.tc(fn -> decode(encoded, encoded_table) end)
+      IO.puts("#{length(text)}, nan, #{encoding_time_fast/1000}, #{decoding_time/1000}, #{len/1000}, #{:math.pow(len/1000,2)}")
+    end
+  end
+
+  def benchmark_fast(path, encoded_table) do
+    text = read(path)
+    {encoding_time, encoded} = :timer.tc(fn -> fast_encode([], text, encoded_table) end)
+    {decoding_time, decoded} = :timer.tc(fn -> decode(encoded, encoded_table) end)
+    len = length(text)
+    IO.puts("#{length(text)}, #{encoding_time/1000}, #{decoding_time/1000}, #{len/1000}, #{:math.pow(len/1000,2)}")
+  end
+
+
   def test do
     sample = sample()
+    IO.puts("Sample = #{sample}")
     tree = tree(sample)
+    IO.puts("Tree = #{inspect(tree)}")
     encode = encode_table(tree)
-    decode = decode_table(tree)
+    IO.puts("Encode = #{inspect(encode)}")
+
+    decode = encode #decode_table(tree)
+    IO.puts("Decode = #{inspect(decode)}")
+
     text = text()
     seq = encode(text, encode)
     decode(seq, decode)
@@ -142,6 +205,14 @@ defmodule Huffman do
     end)
   end
 
+  def fast_encode(bits, [], _) do bits end
+  def fast_encode([], [c|h], table) do
+    bits = Map.get(table, c, [])
+    fast_encode(bits, h, table)
+  end
+  def fast_encode([b|h], chars, table) do
+    [b|fast_encode(h, chars, table)]
+  end
 
   def decode([], _) do
     []
