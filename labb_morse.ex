@@ -9,19 +9,27 @@ defmodule Morse do
 
     # Encoda 10MB text  ->
 
-  def bench(len) do
+  def bench(len, n) do
     rnd = rnd_text(len)
     enc = encode_map()
+    tup = encode_tuple()
     dec = decode_table()
-    {enc_time, encoded} = :timer.tc(fn() -> encode(rnd, enc) end)
-    {dec_time, _} = :timer.tc(fn() -> decode(encoded, dec) end)
-    IO.puts("#{len}B, #{enc_time/1000}ms, #{dec_time/1000}ms")
+    ln = List.duplicate(nil, n)
+
+    {map, tup, dec} = Enum.reduce(ln, {0,0,0}, fn(x, {a,b,c}) ->
+      {enc_time_map, encoded} = :timer.tc(fn() -> encode_with_map(rnd, enc) end)
+      {enc_time_tuple, encoded} = :timer.tc(fn() -> encode_with_tuple(rnd, tup) end)
+      {dec_time, _} = :timer.tc(fn() -> decode(encoded, dec) end)
+      {a+enc_time_map/1000, b+enc_time_tuple/1000, c+dec_time/1000}
+    end)
+
+    IO.puts("#{len}, #{map/n}, #{tup/n}, #{dec/n}")
   end
 
   def bench_all() do
     benchs = [1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000,
-    1024000, 2048000, 4096000, 8192000]
-    Enum.each(benchs, fn(len) -> bench(len) end)
+    1024000]#, 2048000]#, 4096000, 8192000]
+    Enum.each(benchs, fn(len) -> bench(len, 3) end)
   end
 
   def rnd_text(len) do
@@ -48,25 +56,24 @@ defmodule Morse do
 
 def encode_map() do
   tree = decode_tree()
-  list = encode_map(tree, :top)
+  list = encode_list(tree, :top)
   Map.new(list)
   # Create a map of the characters from [symbol] --> [morse[]]
 end
 
-#def encode_map(nil, _) do [] end
-#
-#def encode_map({:node, :na, l, r}, path) do
-#  encode_map(l, [:da|path]) ++ encode_map(r, [:di|path])
-#end
-#
-#def encode_map({:node, v, l, r}, path) do
-#  [{v, path}] ++ encode_map(l, [:da|path]) ++ encode_map(r, [:di|path])
-#end
+def encode_tuple() do
+  tree = decode_tree()
+  list = encode_list(tree, :top)
+  tuple = Tuple.duplicate(nil, 130)
+  Enum.reduce(list, tuple, fn({k, v}, t_acc) ->
+    put_elem(t_acc, k, v)
+  end)
+end
 
-def encode_map(nil, _) do [] end
+def encode_list(nil, _) do [] end
 
-def encode_map({:node, :na, l, r}, origin) do
-  found = encode_map(l, :da) ++ encode_map(r, :di)
+def encode_list({:node, :na, l, r}, origin) do
+  found = encode_list(l, :da) ++ encode_list(r, :di)
   Enum.reduce(found, [], fn({v, path}, acc) ->
     case origin do
       :da  -> [{v, [45|path]}|acc]
@@ -76,8 +83,8 @@ def encode_map({:node, :na, l, r}, origin) do
   end)
 end
 
-def encode_map({:node, v, l, r}, origin) do
-  found = [{v, []}] ++ encode_map(l, :da) ++ encode_map(r, :di)
+def encode_list({:node, v, l, r}, origin) do
+  found = [{v, []}] ++ encode_list(l, :da) ++ encode_list(r, :di)
   Enum.reduce(found, [], fn({v, path}, acc) ->
     case origin do
       :da  -> [{v, [45|path]}|acc]
@@ -85,11 +92,16 @@ def encode_map({:node, v, l, r}, origin) do
       :top -> [{v, path}|acc]
     end
   end)
+end
+
+
+def encode_with_tuple(string, encode_tuple) do
+  encode_acc_tuple(reverse_list(string, []), encode_tuple, [])
 end
 
 # Must reverse the string first!
-def encode(string, encode_map) do
-  encode_acc(reverse_list(string, []), encode_map, [])
+def encode_with_map(string, encode_map) do
+  encode_acc_map(reverse_list(string, []), encode_map, [])
 end
 
 def reverse_list([], acc) do acc end
@@ -97,11 +109,18 @@ def reverse_list([h|t], acc) do
   reverse_list(t, [h|acc])
 end
 
-def encode_acc([], _, acc) do acc end
-def encode_acc([c|t], encode_map, acc) do
+def encode_acc_map([], _, acc) do acc end
+def encode_acc_map([c|t], encode_map, acc) do
   morse = Map.get(encode_map, c)
   new_acc = morse ++ [?\s|acc]
-  encode_acc(t, encode_map, new_acc)
+  encode_acc_map(t, encode_map, new_acc)
+end
+
+def encode_acc_tuple([], _, acc) do acc end
+def encode_acc_tuple([c|t], encode_tuple, acc) do
+  morse = elem(encode_tuple, c)
+  new_acc = morse ++ [?\s|acc]
+  encode_acc_tuple(t, encode_tuple, new_acc)
 end
 
 
