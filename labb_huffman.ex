@@ -1,5 +1,30 @@
 defmodule Huffman do
 
+  #def test_where(num) do
+  #  text = read("benchmark_data/elixir.txt")
+  #  found = Enum.find(text, false, fn(c) -> c == num end)
+  #  Enum.reduce(text, 0,
+  #    fn(x, acc) ->
+  #      if(acc <= 0) do
+  #        if(x == num)
+  #          -acc
+  #        else
+  #          acc-1
+  #        end
+  #      else
+  #        acc
+  #      end
+  #    end
+  #  )
+  #end
+
+
+  def get_random_string_with_x_chart(x) when x<=0 do [] end
+  def get_random_string_with_x_chart(x) do
+    # mellan 97 och 128
+    [:rand.uniform(30)+97|get_random_string_with_x_chart(x-1)]
+  end
+
   def read(file) do
     {:ok, file} = File.open(file, [:read, :utf8])
     binary = IO.read(file, :all)
@@ -39,34 +64,41 @@ defmodule Huffman do
 
   def bench_all() do
     files = bench_files()
-    encoded_table = encode_table(tree(read("benchmark_data/advent4.txt")))
-    IO.puts("Basic bench results:")
-    Enum.each(files, fn(file) -> benchmark(file, encoded_table) end)
+    encoded_table = encode_table(tree(read("benchmark_data/all.txt")))
+    encoded_map   = encode_map(tree(read("benchmark_data/all.txt")))
+    decoded_table = decode_table(tree(read("benchmark_data/all.txt")))
+    decoded_map   = decode_map(tree(read("benchmark_data/all.txt")))
+    IO.puts("map size: #{Map.size(encoded_map)}, list size = #{length(encoded_table)}")
+    Enum.each(files, fn(file) -> benchmark(read(file), encoded_table, encoded_map, decoded_table, decoded_map) end)
+    IO.puts("RANDOM BENCH:")
+    sizes = [100, 512, 1000,2000,4000,8000,16000,32000,64000, 128000, 256000, 512000]
+    Enum.each(sizes, fn(size) -> benchmark(get_random_string_with_x_chart(size),
+      encoded_table, encoded_map, decoded_table, decoded_map) end)
   end
 
-  def benchmark(path, encoded_table) do
-    text = read(path)
+
+  def benchmark(text, encoded_table, encoded_map, decoded_table, decoded_map) do
     len = length(text)
-    if(len<10000) do
-      {encoding_time, encoded} = :timer.tc(fn -> encode(text, encoded_table) end)
-      {encoding_time_fast, encoded} = :timer.tc(fn -> fast_encode([], text, encoded_table) end)
-      {decoding_time, decoded} = :timer.tc(fn -> decode(encoded, encoded_table) end)
-      IO.puts("#{length(text)}, #{encoding_time/1000}, #{encoding_time_fast/1000}, #{decoding_time/1000}, #{len/1000}, #{:math.pow(len/1000,2)}")
+    encoding_time = 0
+    encoding_time_fast = 0
+    decoding_time = 0
+    decoding_time_fast = 0
+    if(len<1000000) do
+      {encoding_time,      encoded} = :timer.tc(fn -> encode(text, encoded_table) end)
+      {encoding_time_fast, encoded} = :timer.tc(fn -> fast_encode(text, encoded_map) end)
+      {decoding_time,      decoded} = :timer.tc(fn -> decode(encoded, decoded_table) end)
+      {decoding_time_fast, decoded} = :timer.tc(fn -> fast_decode(encoded, decoded_map) end)
+      # (n, enc, dec, enc_fast, dec_fast)
+      IO.puts(
+        "#{length(text)}, #{encoding_time/1000}, #{encoding_time_fast/1000}, #{decoding_time/1000}, #{decoding_time_fast/1000}, #{len/1000}, #{:math.pow(len/1000,2)}"
+        )
     else
-      {encoding_time_fast, encoded} = :timer.tc(fn -> fast_encode([], text, encoded_table) end)
-      {decoding_time, decoded} = :timer.tc(fn -> decode(encoded, encoded_table) end)
-      IO.puts("#{length(text)}, nan, #{encoding_time_fast/1000}, #{decoding_time/1000}, #{len/1000}, #{:math.pow(len/1000,2)}")
+      # (n, enc, dec, enc_fast, dec_fast)
+      {encoding_time_fast, encoded}      = :timer.tc(fn -> fast_encode(text, encoded_map) end)
+      {decoding_time, decoded}      = :timer.tc(fn -> decode(encoded, decoded_table) end)
+      IO.puts("#{length(text)}, nan, #{encoding_time_fast/1000}, #{decoding_time/1000}, nan, #{len/1000}, #{:math.pow(len/1000,2)}")
     end
   end
-
-  def benchmark_fast(path, encoded_table) do
-    text = read(path)
-    {encoding_time, encoded} = :timer.tc(fn -> fast_encode([], text, encoded_table) end)
-    {decoding_time, decoded} = :timer.tc(fn -> decode(encoded, encoded_table) end)
-    len = length(text)
-    IO.puts("#{length(text)}, #{encoding_time/1000}, #{decoding_time/1000}, #{len/1000}, #{:math.pow(len/1000,2)}")
-  end
-
 
   def test do
     sample = sample()
@@ -109,7 +141,7 @@ defmodule Huffman do
   def freq([char | rest], freq) do
     tot = case Map.get(freq, char) do
       nil -> 0
-      n -> n
+      n   -> n
     end
     freq(rest, Map.put(freq, char, tot+1))
   end
@@ -140,17 +172,11 @@ defmodule Huffman do
 
   # trees är alltid sorterat för att förenkla användningen!
   def huffman(trees) do
-    #IO.puts("ÄR I TREE/2")
     # Merga de två första
     [{t1, f1},{t2, f2}|rest] = trees
-    #IO.puts("{t1, f1} = #{inspect({t1, f1})} {t2, f2} = #{inspect({t2, f2})}")
     new_tree = {{t1, t2}, f1+f2}
-
-    #IO.puts("new_tree = #{inspect(new_tree)}")
-
     # Skapa det nya sorterade trädet och fortsätt
     sorted_new_trees = sort_key_val_list([new_tree|rest])
-    #IO.puts("sorted_new_tree = #{inspect(sorted_new_trees)}")
 
     huffman(sorted_new_trees)
   end
@@ -165,8 +191,12 @@ defmodule Huffman do
     end
   end
 
-  def encode_table(tree) do
+  def encode_map(tree) do
     Map.new(encode_table(tree, :top))
+  end
+
+  def encode_table(tree) do
+    encode_table(tree, :top)
   end
 
   def encode_table(elm, _) when is_integer(elm) do [] end
@@ -194,17 +224,30 @@ defmodule Huffman do
     end)
   end
 
-  def decode_table(tree) do
-    # To implement...
-  end
-
-  #Långsam encode
-  def encode(text, table) do
-    Enum.reduce(text, [], fn(char, acc) ->
-      acc ++ Map.get(table, char, [])
+  def decode_map(tree) do
+    table = encode_table(tree)
+    Enum.reduce(table, %{}, fn({k, v}, dec_map) ->
+      Map.put(dec_map, v, k)
     end)
   end
 
+  def decode_table(tree) do
+    encode_table(tree)
+  end
+
+  #Encode använder listor
+  def encode(text, table) do encode([], text, table) end
+  def encode(bits, [], _) do bits end
+  def encode([], [c|h], table) do
+    {_, bits} = List.keyfind(table, c, 0, {[], []})
+    encode(bits, h, table)
+  end
+  def encode([b|h], chars, table) do
+    [b|encode(h, chars, table)]
+  end
+
+  # Fast_encode använder maps
+  def fast_encode(text, table) do fast_encode([], text, table) end
   def fast_encode(bits, [], _) do bits end
   def fast_encode([], [c|h], table) do
     bits = Map.get(table, c, [])
@@ -214,9 +257,14 @@ defmodule Huffman do
     [b|fast_encode(h, chars, table)]
   end
 
-  def decode([], _) do
-    []
+  def fast_decode([], _) do [] end
+
+  def fast_decode(seq, map) do
+    {char, rest} = decode_char_fast(seq, 1, map)
+    [char | fast_decode(rest, map)]
   end
+
+  def decode([], _) do [] end
 
   def decode(seq, table) do
     {char, rest} = decode_char(seq, 1, table)
@@ -239,4 +287,16 @@ defmodule Huffman do
         {char, rest}
     end
   end
+
+  def decode_char_fast(seq, n, map) do
+    {code, rest} = Enum.split(seq, n)
+    found = Map.get(map, code)
+    case found do
+      nil ->
+        decode_char_fast(seq, n+1, map)
+      char ->
+        {char, rest}
+    end
+  end
+
 end
